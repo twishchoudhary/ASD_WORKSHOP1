@@ -1,4 +1,5 @@
 const productService = require('../services/productService');
+const { clearCache } = require('../middleware/cacheMiddleware');
 
 const getAllProducts = async (req, res) => {
   try {
@@ -24,6 +25,7 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const newProduct = await productService.createProduct(req.body);
+    clearCache();
     res.status(201).json(newProduct);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -36,6 +38,7 @@ const updateProduct = async (req, res) => {
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }
+    clearCache();
     res.json(updatedProduct);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -48,6 +51,7 @@ const patchProduct = async (req, res) => {
     if (!patchedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }
+    clearCache();
     res.json(patchedProduct);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -60,6 +64,7 @@ const deleteProduct = async (req, res) => {
     if (!deletedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }
+    clearCache();
     res.json({ message: 'Product deleted successfully', product: deletedProduct });
   } catch (err) {
     res.status(400).json({ error: err.message });
